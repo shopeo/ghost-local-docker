@@ -1,0 +1,44 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    command: --authentication_policy=mysql_native_password
+    environment:
+      MYSQL_DATABASE: ghost
+      MYSQL_ROOT_PASSWORD: ghost
+    volumes:
+      - ./ghost/mysql:/var/lib/mysql
+
+  nginx:
+    image: nginxproxy/nginx-proxy:latest
+    container_name: nginx
+    restart: always
+    environment:
+      TRUST_DOWNSTREAM_PROXY: false
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./ghost/nginx/certs:/etc/nginx/certs
+
+  ghost:
+    image: ghost:latest
+    container_name: ghost
+    restart: always
+    depends_on:
+      - mysql
+    env_file:
+      - .env
+    environment:
+      database__client: mysql
+      database__connection__host: mysql
+      database__connection__user: root
+      database__connection__password: ghost
+      database__connection__database: ghost
+      url: https://${DOMAIN_NAME}
+      VIRTUAL_PORT: 2368
+      VIRTUAL_HOST: ${DOMAIN_NAME}
+    volumes:
+      - ./ghost/web:/var/lib/ghost/content
