@@ -8,7 +8,7 @@ services:
       MYSQL_DATABASE: ghost
       MYSQL_ROOT_PASSWORD: ghost
     volumes:
-      - ./ghost/mysql:/var/lib/mysql
+      - ./mysql:/var/lib/mysql
 
   nginx:
     image: nginxproxy/nginx-proxy:latest
@@ -21,7 +21,7 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./ghost/nginx/certs:/etc/nginx/certs
+      - ./nginx/certs:/etc/nginx/certs
 
   ghost:
     image: ghost:latest
@@ -29,6 +29,7 @@ services:
     restart: always
     depends_on:
       - mysql
+      - nginx
     env_file:
       - .env
     environment:
@@ -41,4 +42,4 @@ services:
       VIRTUAL_PORT: 2368
       VIRTUAL_HOST: ${DOMAIN_NAME}
     volumes:
-      - ./ghost/web:/var/lib/ghost/content
+      - ./ghost:/var/lib/ghost/content
