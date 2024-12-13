@@ -5,7 +5,6 @@
 create a file `.env` or copy the file `.env.example` to `.env` and set the values
 
 ```bash
-TZ=Shanghai
 DOMAIN_NAME=example.com
 ```
 
