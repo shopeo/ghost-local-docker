@@ -20,7 +20,7 @@ brew install nss # if you use Firefox
 ### Create a local CA
 
 ```bash
-mkcert -key-file ./ghost/nginx/certs/example.com.key -cert-file ./ghost/nginx/certs/example.com.crt example.com
+mkcert -key-file ./nginx/certs/example.com.key -cert-file ./nginx/certs/example.com.crt example.com
 ```
 
 ### Install root certificate
